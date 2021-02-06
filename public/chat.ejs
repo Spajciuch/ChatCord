@@ -1,0 +1,294 @@
+<%- include("./head.ejs") %>
+
+  <body>
+    <div id="context-menu" class="context-menu">
+      <a id=dmDIV>
+        <div class="item">
+          <i class="fa fa-plus"></i> Open DM
+        </div>
+      </a>
+      <div class="item" id="removeMenu" style="display: none;">
+        <i class="fa fa-times"></i> Remove message
+      </div>
+    </div>
+
+    <div class="chat-container">
+      <header class="chat-header">
+
+        <h1><i class="fas fa-smile"></i> ChatCord</h1>
+
+        <div class="form-control">
+          <label for="room">Room: </label>
+
+          <select name="room" id="room" class="input">
+            <% for(var i=0; i <= list.rooms.length -1 ; i++) { %>
+
+              <% if (!list.removed.includes(list.rooms[i])) { %> 
+                <option value="<%= list.rooms[i] %>"><%= list.rooms[i] %></option>
+              <% }} %>
+          </select>
+        </div>
+
+        <a href="/create" class="btn">Create Room</a>
+      </header>
+
+      <main class="chat-main">
+        <div class="chat-sidebar">
+
+          <h3><i class="fas fa-comments"></i> Room Name:</h3>
+
+          <h2 id="room-name">
+            <%= room %><i class="fas fa-trash right" style="display: none;" id="roomMenu"></i>
+          </h2>
+
+          <h3><i class="fas fa-users"></i> Users</h3>
+          <ul id="users"></ul>
+
+        </div>
+        <div class="chat-messages">
+        </div>
+      </main>
+
+      <div class="chat-form-container">
+
+        <form id="chat-form">
+          <!-- <label class="custom-file-upload">
+            <input id="file" type="file" />
+            <i class="fas fa-image"></i>
+          </label> -->
+          <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
+          <button class="btn" type="submit"><i class="fas fa-paper-plane"></i>Send</button>
+        </form>
+
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js"
+      integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg=="
+      crossorigin="anonymous"></script>
+    <script src="../js/socket.io.js"></script>
+
+  </body>
+
+  <script>
+    const chatForm = document.getElementById("chat-form")
+    const chatMessages = document.querySelector(".chat-messages")
+    const roomName = document.getElementById("room-name")
+    const userList = document.getElementById("users")
+    const roomForm = document.getElementById("room")
+    const file = document.getElementById("file")
+
+    const username = "<%- username %>"
+    const room = "<%- room %>"
+
+    roomForm.value = "<%- room %>"
+
+    const socket = io();
+
+    socket.emit("joinRoom", { username, room })
+
+    socket.on("REDIRECT", path => {
+      window.location.href = path
+    })
+
+    socket.on("roomUsers", ({ room, users }) => {
+      // outputRoomName(room)
+      outputUsers(users)
+    })
+
+    socket.on("private", msg => {
+      outputNotification(msg)
+    })
+
+    socket.on("oldMessages", channelObj => {
+      outputOldMessages(channelObj)
+      setOwner(channelObj.owner)
+
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    })
+
+    socket.on("message", message => {
+      outputMessage(message)
+
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    })
+
+    socket.on("removed", id => {
+      document.getElementById(id.toString()).remove()
+    })
+
+    socket.on("redirect", path => {
+      window.location.href = path
+    })
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      const msg = e.target.elements.msg.value
+
+      socket.emit("chatMessage", msg)
+
+      e.target.elements.msg.value = ""
+      e.target.elements.msg.focus()
+    })
+
+    roomForm.onchange = function () {
+      var index = this.selectedIndex
+      var inputText = this.children[index].innerHTML.trim()
+
+      window.location.replace(`/chat/${inputText}`)
+    }
+
+    const roomMenu = document.getElementById("roomMenu")
+
+    function setOwner(owner) {
+      if (username == owner && room !== "PL 1") {
+        roomMenu.style = ""
+      }
+
+      roomMenu.onmousedown = e => {
+        e.preventDefault()
+
+        const answer = window.confirm("Are you sure to remove this room");
+        if (answer) {
+          socket.emit("removeRoom")
+        }
+        else {
+          console.log("canceled")
+        }
+      }
+    }
+
+    function outputMessage(message) {
+      if (message.removed) return
+      if (typeof (message.text) !== "string") return
+
+      let finalMessage = ""
+
+      function hasLink(strng) {
+        return strng.includes("https://")
+      }
+
+      var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+      };
+
+      function escapeHtml(string) {
+        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+          return entityMap[s];
+        })
+      }
+
+      function formatIndexArray(rawTextArray, linkArray) {
+        let indexArray = []
+
+        for (var i = 0; i <= linkArray.length - 1; i++) {
+          indexArray.push(rawTextArray.indexOf(linkArray[i]))
+        }
+
+        return indexArray
+      }
+
+      function formatMessageWithLinks(escapedTextArray, linkArray, indexArray) {
+        for (var i = 0; i <= linkArray.length - 1; i++) {
+          escapedTextArray[indexArray[i]] = `<a href="${linkArray[i]}">${linkArray[i]}</a>`
+        }
+
+        for (var i = 0; i <= linkArray.length - 1; i++) {
+
+        }
+
+        return escapedTextArray.join(" ")
+      }
+
+      if (message.text.includes("https://")) {
+        const escapedText = escapeHtml(message.text)
+        const rawText = message.text
+
+        const rawTextArray = rawText.split(" ")
+        const escapedTextArray = escapedText.split(" ")
+        const linkArray = rawTextArray.filter(hasLink)
+
+        const indexArray = formatIndexArray(rawTextArray, linkArray)
+
+        finalMessage = formatMessageWithLinks(escapedTextArray, linkArray, indexArray)
+      } else {
+        finalMessage = escapeHtml(message.text)
+      }
+      // <img class="avatar" src="https://i.wpimg.pl/1777x0/d.wpimg.pl/1294094975--769611975/avatar.jpg">
+      const div = document.createElement("div")
+      div.id = message.id
+      div.classList.add("message")
+      div.innerHTML = `<p class="meta"> <img class="img" src="../images/icon.png"> <a class="userNick" href="/dm/${message.username}">${message.username}</a> <span>${message.time}</span></p>
+      
+      <p class="p">
+    ${finalMessage}
+    </p>`
+
+      div.addEventListener("contextmenu", function (event) {
+        var a = document.getElementById("dmDIV")
+        var removeMenu = document.getElementById("removeMenu")
+        // var profile = document.getElementById("profile")
+
+        a.setAttribute('href', `/dm/${message.username}`)
+
+        event.preventDefault();
+
+        console.log(event)
+
+        if (message.username == username || username == "<%= owner %>") {
+          removeMenu.style = ""
+          // avatar.style = ""
+        } else {
+          removeMenu.style = "display: none;"
+          // avatar.style = "display: none;"
+        }
+
+        // avatar.onmousedown = function () {
+        //   window.location.href = "/avatar"
+        // }
+
+        removeMenu.onmousedown = function () {
+          socket.emit("removeMessage", ({ message, room }))
+        }
+
+        var contextElement = document.getElementById("context-menu");
+        contextElement.style.top = event.clientY + "px";
+        contextElement.style.left = event.clientX + "px";
+        contextElement.classList.add("active");
+      });
+
+      window.addEventListener("click", function () {
+        document.getElementById("context-menu").classList.remove("active");
+      });
+
+      document.querySelector(".chat-messages").appendChild(div)
+    }
+
+    function outputUsers(users) {
+      userList.innerHTML = `
+        ${users.map(user => `<li><a class = "userList" href = "/dm/${user.username}">${user.username}</a></li>`).join("")}
+    `
+    }
+
+    function outputOldMessages(channelObj) {
+      const messages = channelObj.messages
+
+      messages.forEach(message => {
+        outputMessage(message)
+      })
+    }
+
+    function outputNotification(msg) {
+      alert(msg)
+    }
+  </script>
+
+  </html>

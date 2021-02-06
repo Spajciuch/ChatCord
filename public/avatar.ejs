@@ -1,0 +1,43 @@
+<%- include("./head.ejs") %>
+
+<body>
+    <div class="join-container">
+        <header class="join-header">
+            <h1><i class="fas fa-smile"></i> ChatCord</h1>
+        </header>
+        <main class="join-main">
+            <form action="" method="POST" name="forma">
+                <div class="form-control" name="controla">
+                    <label for="name">Set your avatar</label>
+                    <label id = "label" class="custom-file-upload">
+                        <input id="file" type="file" onchange="setName()" accept="image/png, image/jpeg"/>
+                        <i class="fas fa-image"></i> 
+                      </label>
+                    <div class="form-control">
+
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Upload new avatar</button>
+                <button class="btn" onclick="window.history.back()">Back to Chat</button>
+            </form>
+        </main>
+    </div>
+</body>
+
+<script>
+const label = document.getElementById("label")
+const input = document.getElementById("file")
+
+function setName() {
+    const filePath = input.value
+    const filePathArray = filePath.split("\\")
+    const fileName = filePathArray[filePathArray.length -1]
+
+   const text = document.createTextNode(fileName)
+   label.appendChild(text)
+}
+
+</script>
+
+</html>

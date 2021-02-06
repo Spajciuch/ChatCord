@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("./head.ejs") %>
+
+    <body>
+        <div id="context-menu">
+            <div class="item" id="removeMenu" style="display: none;">
+                <i class="fa fa-times"></i> Remove message
+            </div>
+        </div>
+        <div class="chat-container">
+            <header class="chat-header">
+                <h1><i class="fas fa-smile"></i> ChatCord</h1>
+                <a onclick="window.history.back()" class="btn">Go back</a>
+            </header>
+            <main class="chat-main">
+                <div class="chat-sidebar">
+                    <h3><i class="fas fa-comments"></i> Direct messages:</h3>
+                    <h2 id="room-name">
+                        <%- username %>
+                    </h2>
+                </div>
+                <div class="chat-messages">
+                </div>
+            </main>
+            <div class="chat-form-container">
+                <form id="chat-form">
+                    <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
+                    <button class="btn"><i class="fas fa-paper-plane"></i>Send</button>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.6/qs.min.js"
+            integrity="sha512-3TmPrquYLaAsUmZKXRARTDC5siWhLAdBVqNo4dWpDABBtLU62AaoTaQJEvjxjExcZYurO6i1dnK85k8pPIBlRg=="
+            crossorigin="anonymous"></script>
+        <script src="../js/socket.io.js"></script>
+    </body>
+
+    <script>
+        const chatForm = document.getElementById("chat-form")
+        const chatMessages = document.querySelector(".chat-messages")
+        const roomName = document.getElementById("room-name")
+        const userList = document.getElementById("users")
+        const removeMenu = document.getElementById("removeMenu")
+
+        const username = "<%- author %>"
+        const room = "<%- dmID %>"
+
+        console.log(username)
+        chatMessages.scrollTop = chatMessages.scrollHeight
+
+        const socket = io();
+
+        socket.emit("joinDM", { room })
+
+        socket.on("dMessage", message => {
+            console.log(message)
+            outputMessage(message)
+
+            chatMessages.scrollTop = chatMessages.scrollHeight
+        })
+
+        socket.on("oldMessages", channelObj => {
+            outputOldMessages(channelObj)
+        })
+
+        chatForm.addEventListener("submit", (e) => {
+            e.preventDefault()
+
+            const msg = e.target.elements.msg.value
+
+            socket.emit("directMessage", msg)
+
+            e.target.elements.msg.value = ""
+            e.target.elements.msg.focus()
+        })
+
+        socket.on("removed", id => {
+            document.getElementById(id.toString()).remove()
+        })
+
+        socket.on("redirect", path => {
+            window.location.href = path
+        })
+
+        function outputMessage(message) {
+            if (message.removed) return
+            let finalMessage = ""
+
+            function hasLink(strng) {
+                return strng.includes("https://")
+            }
+
+            var entityMap = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '/': '&#x2F;',
+                '`': '&#x60;',
+                '=': '&#x3D;'
+            };
+
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+                    return entityMap[s];
+                })
+            }
+
+            function formatIndexArray(rawTextArray, linkArray) {
+                let indexArray = []
+
+                for (var i = 0; i <= linkArray.length - 1; i++) {
+                    indexArray.push(rawTextArray.indexOf(linkArray[i]))
+                }
+
+                return indexArray
+            }
+
+            function formatMessageWithLinks(escapedTextArray, linkArray, indexArray) {
+                for (var i = 0; i <= linkArray.length - 1; i++) {
+                    escapedTextArray[indexArray[i]] = `<a href="${linkArray[i]}">${linkArray[i]}</a>`
+                }
+
+                for (var i = 0; i <= linkArray.length - 1; i++) {
+
+                }
+
+                return escapedTextArray.join(" ")
+            }
+
+            if (message.text.includes("https://")) {
+                const escapedText = escapeHtml(message.text)
+                const rawText = message.text
+
+                const rawTextArray = rawText.split(" ")
+                const escapedTextArray = escapedText.split(" ")
+                const linkArray = rawTextArray.filter(hasLink)
+
+                const indexArray = formatIndexArray(rawTextArray, linkArray)
+
+                finalMessage = formatMessageWithLinks(escapedTextArray, linkArray, indexArray)
+            } else {
+                finalMessage = escapeHtml(message.text)
+            }
+
+            const div = document.createElement("div")
+            div.classList.add("message")
+            div.id = message.id
+            div.innerHTML = `<p class="meta"> ${message.username} <span>${message.time}</span></p>
+    <p class = "text">
+    ${finalMessage}
+    </p>`
+
+            div.addEventListener("contextmenu", function (event) {
+                event.preventDefault();
+
+                removeMenu.onmousedown = function () {
+                    socket.emit("removeDmMessage", message)
+                }
+
+
+                console.log(message.username == username)
+
+                if (message.username == username) {
+                    removeMenu.style = ""
+                } else {
+                    removeMenu.style = "display: none;"
+                }
+
+                console.log(event)
+
+                var contextElement = document.getElementById("context-menu");
+                contextElement.style.top = event.clientY + "px";
+                contextElement.style.left = event.clientX + "px";
+                contextElement.classList.add("active");
+            });
+
+            window.addEventListener("click", function () {
+                document.getElementById("context-menu").classList.remove("active");
+            });
+
+            document.querySelector(".chat-messages").appendChild(div)
+        }
+
+        function outputRoomName(room) {
+            roomName.innerText = room
+        }
+
+        function outputUsers(users) {
+            userList.innerHTML = `
+        ${users.map(user => `<li><a class = "userList" href = "/dm/${user.username}">${user.username}</a></li>`).join("")}
+    `
+        }
+
+        function outputOldMessages(channelObj) {
+            const messages = channelObj.messages
+
+            messages.forEach(message => {
+                outputMessage(message)
+            })
+        }
+
+    </script>
