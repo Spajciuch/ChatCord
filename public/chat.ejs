@@ -11,9 +11,9 @@
         <i class="fa fa-times"></i> Remove message
       </div>
       <a href="/avatar">
-      <div class="item" id="avatarChange" style="display: none;">
-        <i class="fa fa-id-badge"></i> Change avatar
-      </div>
+        <div class="item" id="avatarChange" style="display: none;">
+          <i class="fa fa-id-badge"></i> Change avatar
+        </div>
       </a>
     </div>
 
@@ -26,10 +26,12 @@
           <label for="room">Room: </label>
 
           <select name="room" id="room" class="input">
-            <% for(var i=0; i <= list.rooms.length -1 ; i++) { %>
-              <% if (!list.removed.includes(list.rooms[i])) { %> 
-                <option value="<%= list.rooms[i] %>"><%= list.rooms[i] %></option>
-              <% }} %>
+            <% for(var i=0; i <=list.rooms.length -1 ; i++) { %>
+              <% if (!list.removed.includes(list.rooms[i])) { %>
+                <option value="<%= list.rooms[i] %>">
+                  <%= list.rooms[i] %>
+                </option>
+                <% }} %>
           </select>
         </div>
 
@@ -223,16 +225,16 @@
         finalMessage = escapeHtml(message.text)
       }
 
-    
+
       // <img class="avatar" src="https://i.wpimg.pl/1777x0/d.wpimg.pl/1294094975--769611975/avatar.jpg">
       const div = document.createElement("div")
       div.id = message.id
-      div.classList.add("message")
-      div.innerHTML = `<p class="meta"> <img class="img" src="../images/icon.png"> <a class="userNick" href="/dm/${message.username}">${message.username}</a> <span>${message.time}</span></p>
-      <img class="avatar" src="/avatars/${message.username}">
-      <p class="p">
-    ${finalMessage}
-    </p>`
+      div.classList.add("container")
+
+      div.innerHTML = `<img src="/avatars/${message.username}" alt="Avatar" style="width:100%;"><b>${message.username}</b>
+    <p></p>
+  <p>${message.text}</p>
+  <span class="time-right">${message.time}</span>`
 
       div.addEventListener("contextmenu", function (event) {
         var a = document.getElementById("dmDIV")
