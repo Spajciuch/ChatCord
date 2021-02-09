@@ -6,20 +6,22 @@
             <h1><i class="fas fa-smile"></i> ChatCord</h1>
         </header>
         <main class="join-main">
-            <form action="" method="POST" name="forma">
+            <form ref='uploadForm' action="" method="POST" name="forma" encType="multipart/form-data">
                 <div class="form-control" name="controla">
+
                     <label for="name">Set your avatar</label>
                     <label id = "label" class="custom-file-upload">
-                        <input id="file" type="file" onchange="setName()" accept="image/png, image/jpeg"/>
+                        <input id="file" type="file" name="image" onchange="setName()" accept="image/png, image/jpeg"/>
                         <i class="fas fa-image"></i> 
-                      </label>
+                    </label>
+
                     <div class="form-control">
 
                     </div>
                 </div>
 
                 <button type="submit" class="btn">Upload new avatar</button>
-                <button class="btn" onclick="window.history.back()">Back to Chat</button>
+                <button class="btn" onclick="window.history.back()" type="button">Back to Chat</button>
             </form>
         </main>
     </div>

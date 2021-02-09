@@ -8,17 +8,17 @@ import * as socketio from "socket.io"
 import * as session from "express-session"
 import * as ejs from "ejs"
 import * as path from "path"
+import * as fileUpload from "express-fileupload"
 
 import * as fs from "fs"
 
-import {userJoin, getUserByName, getRoomUsers, getCurrentUser, userLeave} from "./utils/users"
-import {getRoomList, registerNewRoom, deregisterRoom} from "./utils/tools"
-import {formatMessage, formatDmMessage, removeMessage} from "./utils/messages"
+import { userJoin, getUserByName, getRoomUsers, getCurrentUser, userLeave } from "./utils/users"
+import { getRoomList, registerNewRoom, deregisterRoom, registerNewAvatar } from "./utils/tools"
+import { formatMessage, formatDmMessage, removeMessage } from "./utils/messages"
 
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
-
 app.engine("html", ejs.renderFile)
 
 const renderEJS = (res: express.Response, req: express.Request, file: string, data = {}, status = 200) => {
@@ -33,14 +33,18 @@ const sessionMiddleware = session({
 
 declare module 'express-session' {
     export interface SessionData {
-        user: {username: string, password: string,  id: string, room: string, dm: string};
+        user: { username: string, password: string, id: string, room: string, dm: string, avatar: string };
     }
 }
 
 
-app.use(sessionMiddleware)
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}))
 
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(sessionMiddleware)
 app.use(express.static("./public"))
 
 process.on('unhandledRejection', error => {
@@ -196,6 +200,28 @@ app.post("/create", (req, res) => {
     if (creationStatus == true) {
         res.redirect(`/chat/${req.body.name}`)
     } else renderEJS(res, req, "./public/create.ejs", { success: false })
+})
+
+app.get("/avatar", (req, res) => {
+    renderEJS(res, req, "./public/avatar.ejs", { success: true })
+})
+
+app.post("/avatar", (req, res) => {
+    if (!req.files || Object.keys(req.files).length == 0) return renderEJS(res, req, "./public/avatar.ejs", { success: false })
+
+    const image = req.files.image as fileUpload.UploadedFile
+
+    registerNewAvatar(req.session.user, image)
+
+    res.redirect(`/chat/${req.session.user.room}`)
+})
+
+app.get("/avatars/:username", (req, res) => {
+    const user = getUserByName(req.params.username)
+    
+    let path = __dirname + user.avatar
+
+    res.sendFile(path.replace("dist/", ""))
 })
 
 const botName = "ChatCord Bot"

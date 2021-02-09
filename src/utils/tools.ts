@@ -1,9 +1,11 @@
+import { json } from "body-parser"
+import fileUpload = require("express-fileupload")
 import * as fs from "fs"
 
-export function getRoomList () {
+export function getRoomList() {
     const path = "./database/rooms/list.json"
-    
-    if(!fs.existsSync(path)) {
+
+    if (!fs.existsSync(path)) {
         const listObject = {
             rooms: [
                 "PL 1"
@@ -12,14 +14,14 @@ export function getRoomList () {
 
         fs.writeFileSync(path, JSON.stringify(listObject))
     }
-    
+
     const rawData = fs.readFileSync(path)
     const roomObject = JSON.parse(rawData.toString())
 
     return roomObject
 }
 
-export function registerNewRoom (room: string, username: string) {
+export function registerNewRoom(room: string, username: string) {
     const path = "./database/rooms/list.json"
     const roomPath = `./database/rooms/${room}.json`
 
@@ -55,20 +57,21 @@ interface userObject {
     password: string,
     id: string,
     room: string,
-    dm: string
+    dm: string,
+    avatar: string
 }
 
 export function deregisterRoom(user: userObject) {
     const path = `./database/rooms/${user.room}.json`
     const listPath = "./database/rooms/list.json"
 
-    const rawData =  fs.readFileSync(path)
+    const rawData = fs.readFileSync(path)
     const roomObject = JSON.parse(rawData.toString())
 
     const rawList = fs.readFileSync(listPath)
     const list = JSON.parse(rawList.toString())
 
-    if (roomObject.owner !== user.username) return 
+    if (roomObject.owner !== user.username) return
 
     if (list.removed == undefined) list.removed = []
 
@@ -78,4 +81,23 @@ export function deregisterRoom(user: userObject) {
     fs.writeFileSync(listPath, JSON.stringify(list))
 
     return true
+}
+
+import { v4 as uuidv4 } from 'uuid'
+
+export function registerNewAvatar(user: userObject, image: fileUpload.UploadedFile) {
+    const name = uuidv4()
+
+    const fileName = image.name
+    const extension = fileName.split(".")
+
+    fs.writeFileSync(`./database/images/avatars/${name}-${user.username}.${extension[extension.length - 1]}`, image.data)
+    const path = `./database/users/${user.username.toLocaleLowerCase()}.json`
+    
+    const rawData = fs.readFileSync(path)
+    const userObj = JSON.parse(rawData.toString())
+
+    userObj.avatar = `/database/images/avatars/${name}-${user.username}.${extension[extension.length - 1]}`
+
+    fs.writeFileSync(path, JSON.stringify(userObj))
 }

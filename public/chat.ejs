@@ -10,6 +10,11 @@
       <div class="item" id="removeMenu" style="display: none;">
         <i class="fa fa-times"></i> Remove message
       </div>
+      <a href="/avatar">
+      <div class="item" id="avatarChange" style="display: none;">
+        <i class="fa fa-id-badge"></i> Change avatar
+      </div>
+      </a>
     </div>
 
     <div class="chat-container">
@@ -22,7 +27,6 @@
 
           <select name="room" id="room" class="input">
             <% for(var i=0; i <= list.rooms.length -1 ; i++) { %>
-
               <% if (!list.removed.includes(list.rooms[i])) { %> 
                 <option value="<%= list.rooms[i] %>"><%= list.rooms[i] %></option>
               <% }} %>
@@ -52,10 +56,6 @@
       <div class="chat-form-container">
 
         <form id="chat-form">
-          <!-- <label class="custom-file-upload">
-            <input id="file" type="file" />
-            <i class="fas fa-image"></i>
-          </label> -->
           <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
           <button class="btn" type="submit"><i class="fas fa-paper-plane"></i>Send</button>
         </form>
@@ -222,12 +222,14 @@
       } else {
         finalMessage = escapeHtml(message.text)
       }
+
+    
       // <img class="avatar" src="https://i.wpimg.pl/1777x0/d.wpimg.pl/1294094975--769611975/avatar.jpg">
       const div = document.createElement("div")
       div.id = message.id
       div.classList.add("message")
       div.innerHTML = `<p class="meta"> <img class="img" src="../images/icon.png"> <a class="userNick" href="/dm/${message.username}">${message.username}</a> <span>${message.time}</span></p>
-      
+      <img class="avatar" src="/avatars/${message.username}">
       <p class="p">
     ${finalMessage}
     </p>`
@@ -235,7 +237,7 @@
       div.addEventListener("contextmenu", function (event) {
         var a = document.getElementById("dmDIV")
         var removeMenu = document.getElementById("removeMenu")
-        // var profile = document.getElementById("profile")
+        var avatar = document.getElementById("avatarChange")
 
         a.setAttribute('href', `/dm/${message.username}`)
 
@@ -245,15 +247,11 @@
 
         if (message.username == username || username == "<%= owner %>") {
           removeMenu.style = ""
-          // avatar.style = ""
+          avatar.style = ""
         } else {
           removeMenu.style = "display: none;"
-          // avatar.style = "display: none;"
+          avatar.style = "display: none;"
         }
-
-        // avatar.onmousedown = function () {
-        //   window.location.href = "/avatar"
-        // }
 
         removeMenu.onmousedown = function () {
           socket.emit("removeMessage", ({ message, room }))
