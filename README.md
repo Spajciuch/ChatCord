@@ -14,11 +14,14 @@ I've added some features like:
 - Added session support 
 - Auto break long text
 - Handling 404
+- Remember me option
+- Switching between themes - dark and light
+- Removing messages
 
 ## Planned features
 - [ ] Voice calls
-- [ ] Avatar support
-- [ ] Embeding links
+- [x] Avatar support
+- [x] Embeding links
 
 ## Download and run
 `git clone https://github.com/Spajciuch/chatcord`
