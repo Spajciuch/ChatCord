@@ -1,92 +1,171 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
+/* The checkbox */
 
-.callDiv {
-	
+.checkbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* Hide the browser's default checkbox */
+
+.checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+
+/* On mouse-over, add a grey background color */
+
+.checkbox:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+
+/* When the checkbox is checked, add a blue background */
+
+.checkbox input:checked~.checkmark {
+    background-color: #383c3f;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+
+/* Show the checkmark when checked */
+
+.checkbox input:checked~.checkmark:after {
+    display: block;
+}
+
+
+/* Style the checkmark/indicator */
+
+.checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .callDiv .callBtn {
-	cursor: pointer;
-	padding: 5px 15px;
-	background: var(--light-color);
-	color: var(--dark-color-a);
-	border: 0;
-	font-size: 17px;
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--dark-color-a);
+    border: 0;
+    font-size: 17px;
 }
 
 .callDiv .right {
-	display: flex; justify-content: flex-end
+    display: flex;
+    justify-content: flex-end
 }
 
 .container {
-	border: 2px var(--dark-color-a);
-	background-color: var(--light-color);
-	border-radius: 5px;
-	padding: 10px;
-	margin: 10px 0;
-  }
-  
-  .darker {
-	border-color: #ccc;
-	background-color: #ddd;
-  }
-  
-  .container::after {
-	content: "";
-	clear: both;
-	display: table;
-  }
-  
-  .container img {
-	float: left;
-	min-width: 60px;
-	min-height: 60px;
-	max-width: 60px;
-	max-height: 60px;
-	width: 100%;
-	margin-right: 20px;
-	border-radius: 50%;
-	object-fit: fill;
-  }
-  
-  .container img.right {
-	float: right;
-	margin-left: 20px;
-	margin-right:0;
-  }
-  
-  .time-right {
-	float: right;
-	color: #aaa;
-  }
-  
-  .time-left {
-	float: left;
-	color: #999;
-  }
+    border: 2px var(--dark-color-a);
+    background-color: var(--light-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.container img {
+    float: left;
+    min-width: 60px;
+    min-height: 60px;
+    max-width: 60px;
+    max-height: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+    object-fit: fill;
+}
+
+.container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
 
 .right {
-	position: absolute;
-	right: 10px;
-	top: 12px;
-	cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
 }
 
 .fileP {
-	overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 .p {
-	display:inline;
+    display: inline;
 }
 
 .avatar {
-	max-width: 50px;
+    max-width: 50px;
 }
 
 .img {
-	max-width: 20px;
-	object-fit: none;
+    max-width: 20px;
+    object-fit: none;
 }
 
 input[type="file"] {
@@ -97,288 +176,301 @@ input[type="file"] {
     border: 1px solid #ccc;
     display: inline-block;
     padding: 6px 12px;
-	cursor: pointer;
-	color: var(--dark-color-a);
-	background-color: var(--light-color);;
+    cursor: pointer;
+    color: var(--dark-color-a);
+    background-color: var(--light-color);
+    ;
 }
 
 .error {
-	padding: 30px 40px;
-	background: var(--dark-color-b);
+    padding: 30px 40px;
+    background: var(--dark-color-b);
 }
 
 .input {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
 }
 
 .context-menu {
-	position:absolute;
-	z-index:10000;
-	width:150px;
-	background:#1b1a1a;
-	border-radius:5px;
-	transform:scale(0);
-	transform-origin:top left;
-  }
-  .context-menu.active {
-	transform:scale(1);
-	transition:transform 300ms ease-in-out;
-  }
-  .context-menu .item {
-	padding:8px 10px;
-	font-size:15px;
-	color:#eee;
-  }
-  .context-menu .item:hover {
-	background:#555;
-  }
-  .context-menu .item i {
-	display:inline-block;
-	margin-right:5px;
-  }
-  .context-menu hr {
-	margin:2px 0px;
-	border-color:#555;
-  }
+    position: absolute;
+    z-index: 10000;
+    width: 150px;
+    background: #1b1a1a;
+    border-radius: 5px;
+    transform: scale(0);
+    transform-origin: top left;
+}
+
+.context-menu.active {
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
+}
+
+.context-menu .item {
+    padding: 8px 10px;
+    font-size: 15px;
+    color: #eee;
+}
+
+.context-menu .item:hover {
+    background: #555;
+}
+
+.context-menu .item i {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.context-menu hr {
+    margin: 2px 0px;
+    border-color: #555;
+}
+
 .userList {
-	color: white
+    color: white
 }
+
 .userNick {
-	color: #667aff
+    color: #667aff
 }
+
 .box {
-	background-color: lightgrey;
-	width: 300px;
-	border: 15px solid green;
-	padding: 50px;
-	margin: 20px;
-  }
+    background-color: lightgrey;
+    width: 300px;
+    border: 15px solid green;
+    padding: 50px;
+    margin: 20px;
+}
 
 .alert {
-	padding: 20px;
-	background-color: #f44336;
-	color: white;
-  }
-  .closebtn {
-	margin-left: 15px;
-	color: white;
-	font-weight: bold;
-	float: right;
-	font-size: 22px;
-	line-height: 20px;
-	cursor: pointer;
-	transition: 0.3s;
-  }
-  
-  .closebtn:hover {
-	color: black;
-  }
-
-:root {
-	--text-color: #fff;
-	--dark-color-a: #121314;
-	--dark-color-b: #222227;
-	--light-color: #505053;
-	--success-color: #5cb85c;
-	--error-color: #d9534f;
-	--background-color: rgb(61, 61, 61);
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
 }
 
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+
+:root {
+    --text-color: #fff;
+    --dark-color-a: #121314;
+    --dark-color-b: #222227;
+    --light-color: #505053;
+    --success-color: #5cb85c;
+    --error-color: #d9534f;
+    --background-color: rgb(61, 61, 61);
+}
 
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
-	background: var(--light-color);
-	margin: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background: var(--light-color);
+    margin: 20px;
 }
 
 ul {
-	list-style: none;
+    list-style: none;
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .btn {
-	cursor: pointer;
-	padding: 5px 15px;
-	background: var(--light-color);
-	color: var(--text-color);
-	border: 0;
-	font-size: 17px;
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--text-color);
+    border: 0;
+    font-size: 17px;
 }
+
 
 /* Chat Page */
 
 .chat-container {
-	justify-content: center;
-	max-width: 1100px;
-	background: #fff;
-	margin: 30px auto;
-	overflow: hidden;
+    justify-content: center;
+    max-width: 1100px;
+    background: #fff;
+    margin: 30px auto;
+    overflow: hidden;
 }
 
 .chat-header {
-	background: var(--dark-color-a);
-	color: #fff;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	padding: 15px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+    background: var(--dark-color-a);
+    color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: #d9534f;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .chat-main {
-	display: grid;
-	grid-template-columns: 1fr 3fr;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
 }
 
 .chat-sidebar {
-	max-height: 500px;
-	background: var(--dark-color-b);
-	color: #fff;
-	padding: 20px 20px 60px;
-	overflow-y: scroll;
+    max-height: 500px;
+    background: var(--dark-color-b);
+    color: #fff;
+    padding: 20px 20px 60px;
+    overflow-y: scroll;
 }
 
 .chat-sidebar h2 {
-	position: relative;
-	font-size: 20px;
-	background: rgba(0, 0, 0, 0.1);
-	padding: 10px;
-	margin-bottom: 20px;
+    position: relative;
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .chat-sidebar h3 {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .chat-sidebar ul li {
-	padding: 10px 0;
+    padding: 10px 0;
 }
 
 .chat-messages {
-	padding: 30px;
-	max-height: 500px;
-	overflow-y: scroll;
-	background-color: var(--background-color);
-	color: var(--text-color);
+    padding: 30px;
+    max-height: 500px;
+    overflow-y: scroll;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .chat-messages .message {
-	overflow: auto;
-	padding: 10px;
-	margin-bottom: 15px;
-	background-color: var(--light-color);
-	border-radius: 5px;
+    overflow: auto;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: var(--light-color);
+    border-radius: 5px;
 }
 
 .chat-messages .message .meta {
-	float: "right";
-	font-size: 15px;
-	font-weight: bold;
-	color: var(--dark-color-b);
-	opacity: 0.7;
-	margin-bottom: 7px;
+    float: "right";
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--dark-color-b);
+    opacity: 0.7;
+    margin-bottom: 7px;
 }
 
 .chat-messages .message .meta span {
-	color: #777;
+    color: #777;
 }
 
 .chat-form-container {
-	padding: 20px 30px;
-	background-color: var(--dark-color-a);
+    padding: 20px 30px;
+    background-color: var(--dark-color-a);
 }
 
 .chat-form-container form {
-	display: flex;
+    display: flex;
 }
 
 .chat-form-container input[type='text'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	flex: 1;
-	background-color:var(--background-color);
-	color: var(--text-color);
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    flex: 1;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
+
 /* Join Page */
+
 .join-container {
-	max-width: 500px;
-	margin: 80px auto;
-	color: #fff;
+    max-width: 500px;
+    margin: 80px auto;
+    color: #fff;
 }
 
 .join-header {
-	text-align: center;
-	padding: 20px;
-	background: var(--dark-color-a);
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+    text-align: center;
+    padding: 20px;
+    background: var(--dark-color-a);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .join-main {
-	padding: 30px 40px;
-	background: var(--dark-color-b);
+    padding: 30px 40px;
+    background: var(--dark-color-b);
 }
 
 .join-main p {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .join-main .form-control {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .join-main label {
-	display: block;
-	margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .join-main input[type='text'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
 }
 
 .join-main input[type='password'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
 }
+
 .join-main select {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
 }
 
 .join-main .btn {
-	margin-top: 20px;
-	width: 100%;
+    margin-top: 20px;
+    width: 100%;
 }
 
 @media (max-width: 700px) {
-	.chat-main {
-		display: block;
-	}
-
-	.chat-sidebar {
-		display: none;
-	}
+    .chat-main {
+        display: block;
+    }
+    .chat-sidebar {
+        display: none;
+    }
 }

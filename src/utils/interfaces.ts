@@ -16,7 +16,3 @@ export interface userObject {
     room: string,
     dm: string
 }
-
-export interface SessionData {
-    user: { username: string, password: string, id: string, room: string, dm: string, avatar: string };
-}

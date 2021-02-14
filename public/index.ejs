@@ -1,62 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%-include("./head.ejs") %>
+<%- include("./head.ejs") %>
 
-<body>
-	<% if (!success) { %>
-		<div class="alert">
-			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-			<strong>An error occured!</strong> Wrong password or username
-		</div>
-		<% } %>
-			<div class="join-container">
-				<header class="join-header">
-					<h1 id="theme"><i class="fas fa-smile"></i> ChatCord</h1>
-				</header>
-				<main class="join-main">
-					<form method="POST">
-						<div class="form-control">
-							<label for="username">Username</label>
-							<input type="text" name="username" id="username" placeholder="Enter username..." required />
-							<label for="password">Password</label>
-							<input type="password" name="password" id="password" placeholder="Enter password..."
-								required />
-						</div>
+    <body>
+        <% if (!success) { %>
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>An error occured!</strong> Wrong password or username
+            </div>
+            <% } %>
+                <div class="join-container">
+                    <header class="join-header">
+                        <h1 id="theme"><i class="fas fa-smile"></i> ChatCord</h1>
+                    </header>
+                    <main class="join-main">
+                        <form method="POST" id = "form">
+                            <div class="form-control">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" placeholder="Enter username..."
+                                    required />
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" placeholder="Enter password..."
+                                    required />
+                            </div>
 
-						<button type="submit" class="btn">Log in</button>
-					</form>
-					<button class = "btn" onclick="window.location.href='/register'">Register</button>
-				</main>
-			</div>
-</body>
-<script>
-	const theme = document.getElementById("theme")
-    theme.addEventListener("click", e => {
-      e.preventDefault()
-	  let style = localStorage.getItem("theme") || "light"
-      if (style == "dark") {
-        document.documentElement.style.setProperty('--dark-color-a', '#667aff');
-        document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
-        document.documentElement.style.setProperty('--light-color', '#e6e9ff');
-        document.documentElement.style.setProperty('--success-color', '#5cb85c');
-        document.documentElement.style.setProperty('--error-color', '#d9534f');
-        document.documentElement.style.setProperty('--text-color', "black");
-        document.documentElement.style.setProperty('--background-color', "white");
+                            <label class="checkbox">Remember me
+                                <input type="checkbox" id="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
 
-        localStorage.setItem("theme", "light")
-      } else {
-        document.documentElement.style.setProperty('--dark-color-a', '#121314');
-        document.documentElement.style.setProperty('--dark-color-b', '#222227');
-        document.documentElement.style.setProperty('--light-color', '#505053');
-        document.documentElement.style.setProperty('--success-color', '#5cb85c');
-        document.documentElement.style.setProperty('--error-color', '#d9534f');
-        document.documentElement.style.setProperty('--text-color', "white");
-        document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+                            <button type="submit" class="btn" id="login">Log in</button>
+                        </form>
+                        <button class="btn" onclick="window.location.href='/register'">Register</button>
+                    </main>
+                </div>
+    </body>
 
-        localStorage.setItem("theme", "dark")
-      }
-    })
+    <script>
+        const theme = document.getElementById("theme")
+        theme.addEventListener("click", e => {
+            e.preventDefault()
+            let style = localStorage.getItem("theme") || "light"
+            if (style == "dark") {
+                document.documentElement.style.setProperty('--dark-color-a', '#667aff');
+                document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
+                document.documentElement.style.setProperty('--light-color', '#e6e9ff');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "black");
+                document.documentElement.style.setProperty('--background-color', "white");
 
-</script>
+                localStorage.setItem("theme", "light")
+            } else {
+                document.documentElement.style.setProperty('--dark-color-a', '#121314');
+                document.documentElement.style.setProperty('--dark-color-b', '#222227');
+                document.documentElement.style.setProperty('--light-color', '#505053');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "white");
+                document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+
+                localStorage.setItem("theme", "dark")
+            }
+        })
+
+        const savedUsername = localStorage.getItem("login")
+        if(savedUsername!== "null") {
+            console.log(savedUsername == 'null')
+            const username = document.getElementById("username")
+            const password = document.getElementById("password")
+            const checkbox = document.getElementById("checkbox")
+
+            username.value = localStorage.getItem("login")
+            password.value = localStorage.getItem("password")
+            checkbox.checked = true
+        } else {
+            const username = document.getElementById("username")
+            const password = document.getElementById("password")
+            const checkbox = document.getElementById("checkbox")
+
+            username.value = null
+            password.value = null
+            checkbox.checked = false
+        }
+
+
+        const form = document.getElementById("form")
+        let checkbox = document.getElementById("checkbox")
+
+        form.addEventListener("submit", e => {
+            if(checkbox.checked) {
+                const username = document.getElementById("username")
+                const password = document.getElementById("password")
+
+                localStorage.setItem("login", username.value)
+                localStorage.setItem("password", password.value)
+            }
+        })
+
+        checkbox.onchange = (e) => {
+            if (checkbox.checked == false) {
+                localStorage.setItem("login", null)
+                localStorage.setItem("password", null)
+            }
+        }
+    </script>
+
 </html>
