@@ -51,11 +51,6 @@ process.on('unhandledRejection', error => {
     console.log(error)
 })
 
-
-app.get("/", (req, res) => {
-    renderEJS(res, req, "./public/index.ejs", { success: true })
-})
-
 app.get("/", (req, res) => {
     renderEJS(res, req, "./public/index.ejs", { success: true })
 })
