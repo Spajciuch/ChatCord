@@ -30,6 +30,10 @@ I've added some features like:
 
 `npm install`
 
-Before you'll start using this, you have to specify secret and port in .env file
-then 
-`node .`
+Before you'll start using this, you have to build this app 
+
+`tsc`
+
+then run: 
+
+`node dist/server.js`
