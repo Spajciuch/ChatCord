@@ -1,34 +1,66 @@
-<%-include("./head.ejs") %>
+<%- include("./head.ejs") %>
 
-<body>
-	<% if (!success) { %>
-		<div class="alert">
-			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-			<strong>An error occured!</strong> Name is taken
-		</div>
-		<% } %>
-    <div class="join-container">
-        <header class="join-header">
-            <h1><i class="fas fa-smile"></i> ChatCord</h1>
-        </header>
-        <main class="join-main">
-            <form action="" method="POST" name="forma">
-                <div class="form-control" name="controla">
-                    <label for="name">Name of your room</label>
-                    <input type="text" name="name" id="name" placeholder="Enter room name..." required />
+    <body>
+        <% if (!success) { %>
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>An error occured!</strong> Name is taken
+            </div>
+            <% } %>
+                <div class="join-container">
+                    <header class="join-header">
+                        <h1 id = "theme"><i class="fas fa-smile"></i> ChatCord</h1>
+                    </header>
+                    <main class="join-main">
+                        <form action="" method="POST" name="forma">
+                            <div class="form-control" name="controla">
+                                <label for="name">Name of your room</label>
+                                <input type="text" name="name" id="name" placeholder="Enter room name..." required />
 
-                    <div class="form-control">
+                                <div class="form-control">
 
-                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn">Register new room</button>
+                            <button class="btn" onclick="window.history.back()">Back to Chat</button>
+                        </form>
+
+
+                    </main>
                 </div>
+    </body>
+    <script>
+        const theme = document.getElementById("theme")
 
-                <button type="submit" class="btn">Register new room</button>
-                <button class="btn" onclick="window.history.back()">Back to Chat</button>
-            </form>
+        theme.addEventListener("click", e => {
+            e.preventDefault()
 
+            let style = localStorage.getItem("theme") || "light"
 
-        </main>
-    </div>
-</body>
+            if (style == "dark") {
+                document.documentElement.style.setProperty('--dark-color-a', '#667aff');
+                document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
+                document.documentElement.style.setProperty('--light-color', '#e6e9ff');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "black");
+                document.documentElement.style.setProperty('--background-color', "white");
 
-</html>
+                localStorage.setItem("theme", "light")
+            } else {
+                document.documentElement.style.setProperty('--dark-color-a', '#121314');
+                document.documentElement.style.setProperty('--dark-color-b', '#222227');
+                document.documentElement.style.setProperty('--light-color', '#505053');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "white");
+                document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+
+                localStorage.setItem("theme", "dark")
+            }
+        })
+
+    </script>
+
+    </html>

@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
         integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" type="image/png" href="../images/icon.png"/>
+    <link rel="icon" type="image/png" href="../images/icon.png" />
     <title>ChatCord App</title>
     <script src="/siofu/client.js"></script>
+    <script>
+        let s = localStorage.getItem("theme") || "light"
+
+        if (s == "dark") {
+            document.documentElement.style.setProperty('--dark-color-a', '#121314');
+            document.documentElement.style.setProperty('--dark-color-b', '#222227');
+            document.documentElement.style.setProperty('--light-color', '#505053');
+            document.documentElement.style.setProperty('--success-color', '#5cb85c');
+            document.documentElement.style.setProperty('--error-color', '#d9534f');
+            document.documentElement.style.setProperty('--text-color', "white");
+            document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+        } else {
+            document.documentElement.style.setProperty('--dark-color-a', '#667aff');
+            document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
+            document.documentElement.style.setProperty('--light-color', '#e6e9ff');
+            document.documentElement.style.setProperty('--success-color', '#5cb85c');
+            document.documentElement.style.setProperty('--error-color', '#d9534f');
+            document.documentElement.style.setProperty('--text-color', "black");
+            document.documentElement.style.setProperty('--background-color', "white");
+        }
+    </script>
 </head>

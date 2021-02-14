@@ -2,6 +2,8 @@ import { json } from "body-parser"
 import fileUpload = require("express-fileupload")
 import * as fs from "fs"
 
+import {userObject} from "./interfaces"
+
 export function getRoomList() {
     const path = "./database/rooms/list.json"
 
@@ -50,15 +52,6 @@ export function registerNewRoom(room: string, username: string) {
     } else {
         return false
     }
-}
-
-interface userObject {
-    username: string,
-    password: string,
-    id: string,
-    room: string,
-    dm: string,
-    avatar: string
 }
 
 export function deregisterRoom(user: userObject) {

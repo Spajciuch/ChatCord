@@ -1,6 +1,8 @@
 import * as fs from "fs"
 import * as moment from "moment"
 
+import {messageObj, userObject} from "./interfaces"
+
 export function formatMessage(username: string, text: string, room: string) {
     const path = `./database/rooms/${room}.json`
 
@@ -50,25 +52,6 @@ export function formatDmMessage(username: string, text: string, room: string) {
         time: moment().format("hh:mm"),
         id: id
     }
-}
-
-interface messageObj {
-    message: {
-        username: string,
-        text: string,
-        time: string,
-        id: number,
-        removed: boolean
-    },
-    room: string
-}
-
-interface userObject {
-    username: string,
-    password: string,
-    id: string,
-    room: string,
-    dm: string
 }
 
 export function removeMessage(messageObject: messageObj, user: userObject) {

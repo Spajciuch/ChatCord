@@ -11,7 +11,7 @@
         </div>
         <div class="chat-container">
             <header class="chat-header">
-                <h1><i class="fas fa-smile"></i> ChatCord</h1>
+                <h1 id="theme"><i class="fas fa-smile"></i> ChatCord</h1>
                 <a onclick="window.history.back()" class="btn">Go back</a>
             </header>
             <main class="chat-main">
@@ -44,12 +44,38 @@
         const roomName = document.getElementById("room-name")
         const userList = document.getElementById("users")
         const removeMenu = document.getElementById("removeMenu")
+        const theme = document.getElementById("theme")
 
         const username = "<%- author %>"
         const room = "<%- dmID %>"
+        theme.addEventListener("click", e => {
+            let style = localStorage.getItem("theme") || "light"
 
-        console.log(username)
-        chatMessages.scrollTop = chatMessages.scrollHeight
+            e.preventDefault()
+
+            if (style == "dark") {
+                document.documentElement.style.setProperty('--dark-color-a', '#667aff');
+                document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
+                document.documentElement.style.setProperty('--light-color', '#e6e9ff');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "black");
+                document.documentElement.style.setProperty('--background-color', "white");
+
+                localStorage.setItem("theme", "light")
+            } else {
+                document.documentElement.style.setProperty('--dark-color-a', '#121314');
+                document.documentElement.style.setProperty('--dark-color-b', '#222227');
+                document.documentElement.style.setProperty('--light-color', '#505053');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "white");
+                document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+
+                localStorage.setItem("theme", "dark")
+            }
+        })
+
 
         const socket = io();
 

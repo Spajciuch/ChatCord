@@ -1,45 +1,82 @@
 <%- include("./head.ejs") %>
 
-<body>
-    <div class="join-container">
-        <header class="join-header">
-            <h1><i class="fas fa-smile"></i> ChatCord</h1>
-        </header>
-        <main class="join-main">
-            <form ref='uploadForm' action="" method="POST" name="forma" encType="multipart/form-data">
-                <div class="form-control" name="controla">
+    <body>
+        <% if (!success) { %>
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>An error occured!</strong> You have to select an image.
+            </div>
+            <% } %>
+                <div class="join-container">
+                    <header class="join-header">
+                        <h1 id="theme"><i class="fas fa-smile"></i> ChatCord</h1>
+                    </header>
+                    <main class="join-main">
+                        <form ref='uploadForm' action="" method="POST" name="forma" encType="multipart/form-data">
+                            <div class="form-control" name="controla">
 
-                    <label for="name">Set your avatar</label>
-                    <label id = "label" class="custom-file-upload">
-                        <input id="file" type="file" name="image" onchange="setName()" accept="image/png, image/jpeg"/>
-                        <i class="fas fa-image"></i> 
-                    </label>
+                                <label for="name">Set your avatar</label>
+                                <label id="label" class="custom-file-upload">
+                                    <input id="file" type="file" name="image" onchange="setName()"
+                                        accept="image/png, image/jpeg" />
+                                    <i class="fas fa-image"></i>
+                                </label>
 
-                    <div class="form-control">
+                                <div class="form-control">
 
-                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn">Upload new avatar</button>
+                            <button class="btn" onclick="window.history.back()" type="button">Back to Chat</button>
+                        </form>
+                    </main>
                 </div>
+    </body>
 
-                <button type="submit" class="btn">Upload new avatar</button>
-                <button class="btn" onclick="window.history.back()" type="button">Back to Chat</button>
-            </form>
-        </main>
-    </div>
-</body>
+    <script>
 
-<script>
-const label = document.getElementById("label")
-const input = document.getElementById("file")
 
-function setName() {
-    const filePath = input.value
-    const filePathArray = filePath.split("\\")
-    const fileName = filePathArray[filePathArray.length -1]
+        const label = document.getElementById("label")
+        const input = document.getElementById("file")
 
-   const text = document.createTextNode(fileName)
-   label.appendChild(text)
-}
+        function setName() {
+            const filePath = input.value
+            const filePathArray = filePath.split("\\")
+            const fileName = filePathArray[filePathArray.length - 1]
 
-</script>
+            const text = document.createTextNode(fileName)
+            label.appendChild(text)
+        }
 
-</html>
+        const theme = document.getElementById("theme")
+        theme.addEventListener("click", e => {
+            let style = localStorage.getItem("theme") || "light"
+            e.preventDefault()
+
+            if (style == "dark") {
+                document.documentElement.style.setProperty('--dark-color-a', '#667aff');
+                document.documentElement.style.setProperty('--dark-color-b', '#7386ff');
+                document.documentElement.style.setProperty('--light-color', '#e6e9ff');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "black");
+                document.documentElement.style.setProperty('--background-color', "white");
+
+                localStorage.setItem("theme", "light")
+            } else {
+                document.documentElement.style.setProperty('--dark-color-a', '#121314');
+                document.documentElement.style.setProperty('--dark-color-b', '#222227');
+                document.documentElement.style.setProperty('--light-color', '#505053');
+                document.documentElement.style.setProperty('--success-color', '#5cb85c');
+                document.documentElement.style.setProperty('--error-color', '#d9534f');
+                document.documentElement.style.setProperty('--text-color', "white");
+                document.documentElement.style.setProperty('--background-color', "rgb(61, 61, 61)");
+
+                localStorage.setItem("theme", "dark")
+            }
+        })
+
+    </script>
+
+    </html>

@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
+
+.callDiv {
+	
+}
+
+.callDiv .callBtn {
+	cursor: pointer;
+	padding: 5px 15px;
+	background: var(--light-color);
+	color: var(--dark-color-a);
+	border: 0;
+	font-size: 17px;
+}
+
+.callDiv .right {
+	display: flex; justify-content: flex-end
+}
+
 .container {
 	border: 2px var(--dark-color-a);
 	background-color: var(--light-color);
@@ -158,13 +176,17 @@ input[type="file"] {
   .closebtn:hover {
 	color: black;
   }
+
 :root {
-	--dark-color-a: #667aff;
-	--dark-color-b: #7386ff;
-	--light-color: #e6e9ff;
+	--text-color: #fff;
+	--dark-color-a: #121314;
+	--dark-color-b: #222227;
+	--light-color: #505053;
 	--success-color: #5cb85c;
 	--error-color: #d9534f;
+	--background-color: rgb(61, 61, 61);
 }
+
 
 * {
 	box-sizing: border-box;
@@ -191,7 +213,7 @@ a {
 	cursor: pointer;
 	padding: 5px 15px;
 	background: var(--light-color);
-	color: var(--dark-color-a);
+	color: var(--text-color);
 	border: 0;
 	font-size: 17px;
 }
@@ -250,6 +272,8 @@ a {
 	padding: 30px;
 	max-height: 500px;
 	overflow-y: scroll;
+	background-color: var(--background-color);
+	color: var(--text-color);
 }
 
 .chat-messages .message {
@@ -287,6 +311,8 @@ a {
 	padding: 5px;
 	height: 40px;
 	flex: 1;
+	background-color:var(--background-color);
+	color: var(--text-color);
 }
 
 /* Join Page */

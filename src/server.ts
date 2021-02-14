@@ -32,14 +32,14 @@ const sessionMiddleware = session({
 })
 
 declare module 'express-session' {
-    export interface SessionData {
+    interface SessionData {
         user: { username: string, password: string, id: string, room: string, dm: string, avatar: string };
     }
 }
 
 
 app.use(fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 }
 }))
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -221,7 +221,12 @@ app.get("/avatars/:username", (req, res) => {
     
     let path = __dirname + user.avatar
 
-    res.sendFile(path.replace("dist/", ""))
+    if(fs.existsSync(path.replace("dist/", ""))) res.sendFile(path.replace("dist/", ""))
+    else res.sendFile((__dirname + "/database/images/avatars/user.png").replace("dist/", ""))
+})
+
+app.get("/call", (req, res) => {
+    renderEJS(res, req, "./public/call.ejs")
 })
 
 const botName = "ChatCord Bot"
